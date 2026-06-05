@@ -100,6 +100,11 @@ static void collide_capsule_triangle(
         return;
     }
 
+    if (ctx.boolean_test) {
+        result.set_collides();
+        return;
+    }
+
     scalar proj_capsule_vertices[] = {
         dot(capsule_vertices[0], sep_axis),
         dot(capsule_vertices[1], sep_axis)
@@ -261,6 +266,7 @@ void collide(const capsule_shape &capsule, const triangle_mesh &mesh,
 
     mesh.visit_triangles(visit_aabb, [&](auto tri_idx) {
         collide_capsule_triangle(capsule, mesh, tri_idx, capsule_vertices, ctx, result);
+        return !(ctx.boolean_test && result.num_points > 0);
     });
 }
 

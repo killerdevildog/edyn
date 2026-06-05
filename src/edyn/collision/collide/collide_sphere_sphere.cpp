@@ -12,6 +12,11 @@ void collide(const sphere_shape &shA, const sphere_shape &shB,
         return;
     }
 
+    if (ctx.boolean_test) {
+        result.set_collides();
+        return;
+    }
+
     auto dist = std::sqrt(dist_sqr);
     auto dn = dist > EDYN_EPSILON ? d / dist : vector3_x;
     auto rA = -dn * shA.radius;

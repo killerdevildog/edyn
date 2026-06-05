@@ -26,6 +26,15 @@ void collide(const compound_shape &compound, const triangle_mesh &mesh,
             collide(sh, mesh, child_ctx, child_result);
         }, node.shape_var);
 
+        if (ctx.boolean_test) {
+            if (child_result.num_points > 0) {
+                result.set_collides();
+                return;
+            }
+
+            continue;
+        }
+
         // The elements of A in the collision points must be transformed from
         // the child node's space into the compound's space.
         for (size_t i = 0; i < child_result.num_points; ++i) {

@@ -19,10 +19,13 @@ struct collision_context {
 
     scalar threshold;
 
+    // If true, skips closest point calculation.
+    bool boolean_test {false};
+
     collision_context swapped() const {
         return {posB, ornB, aabbB,
                 posA, ornA, aabbA,
-                threshold};
+                threshold, boolean_test};
     }
 };
 
@@ -297,6 +300,11 @@ void collide(const compound_shape &shA, const T &shB,
         collision_result child_result;
         collide(sh, shB, child_ctx, child_result);
 
+        if (ctx.boolean_test && child_result.num_points > 0) {
+            result.set_collides();
+            return false;
+        }
+
         // The elements of A in the collision points must be transformed from the child
         // node's space into A's space.
         for (size_t i = 0; i < child_result.num_points; ++i) {
@@ -310,6 +318,8 @@ void collide(const compound_shape &shA, const T &shB,
             child_point.featureA->part = node_index;
             result.maybe_add_point(child_point);
         }
+
+        return true;
     });
 }
 
@@ -351,11 +361,18 @@ void collide(const T &shA, const paged_mesh_shape &shB,
         collision_result child_result;
         collide(shA, *trimesh, ctx, child_result);
 
+        if (ctx.boolean_test && child_result.num_points > 0) {
+            result.set_collides();
+            return false;
+        }
+
         for (size_t i = 0; i < child_result.num_points; ++i) {
             auto &child_point = child_result.point[i];
             child_point.featureB->part = mesh_idx;
             result.maybe_add_point(child_point);
         }
+
+        return true;
     });
 }
 

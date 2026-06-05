@@ -29,6 +29,11 @@ void collide(const capsule_shape &shA, const plane_shape &shB,
 
         if (distance > ctx.threshold) continue;
 
+        if (ctx.boolean_test) {
+            result.set_collides();
+            return;
+        }
+
         auto vertex = capsule_vertices[i];
         auto pivotA_world = vertex - shB.normal * shA.radius;
         auto pivotA = to_object_space(pivotA_world, ctx.posA, ctx.ornA);

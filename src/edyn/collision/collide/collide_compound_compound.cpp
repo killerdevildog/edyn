@@ -26,6 +26,15 @@ void collide(const compound_shape &shA, const compound_shape &shB,
             collide(shA, sh, child_ctx, child_result);
         }, nodeB.shape_var);
 
+        if (ctx.boolean_test) {
+            if (child_result.num_points > 0) {
+                result.set_collides();
+                return;
+            }
+
+            continue;
+        }
+
         // Transform the B elements of the result points from child shape space
         // into B's space.
         for (size_t i = 0; i < child_result.num_points; ++i) {

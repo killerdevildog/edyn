@@ -128,6 +128,11 @@ static void collide_box_triangle(
         return;
     }
 
+    if (ctx.boolean_test) {
+        result.set_collides();
+        return;
+    }
+
     collision_result::collision_point point;
     point.normal = sep_axis;
     point.distance = distance;
@@ -406,6 +411,7 @@ void collide(const box_shape &box, const triangle_mesh &mesh,
 
     mesh.visit_triangles(visit_aabb, [&](auto tri_idx) {
         collide_box_triangle(box, mesh, tri_idx, box_axes, ctx, result);
+        return !(ctx.boolean_test && result.num_points > 0);
     });
 }
 

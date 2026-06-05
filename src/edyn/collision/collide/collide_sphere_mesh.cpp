@@ -73,6 +73,11 @@ static void collide_sphere_triangle(
         return;
     }
 
+    if (ctx.boolean_test) {
+        result.set_collides();
+        return;
+    }
+
     collision_result::collision_point point;
     point.normal = sep_axis;
     point.distance = distance;
@@ -121,6 +126,7 @@ void collide(const sphere_shape &sphere, const triangle_mesh &mesh,
 
     mesh.visit_triangles(visit_aabb, [&](auto tri_idx) {
         collide_sphere_triangle(sphere, mesh, tri_idx, ctx, result);
+        return !(ctx.boolean_test && result.num_points > 0);
     });
 }
 

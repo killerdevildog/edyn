@@ -18,6 +18,11 @@ void collide(const capsule_shape &shA, const sphere_shape &shB,
         return;
     }
 
+    if (ctx.boolean_test) {
+        result.set_collides();
+        return;
+    }
+
     auto normal = closest - ctx.posB;
     auto normal_len_sqr = length_sqr(normal);
     scalar distance;

@@ -21,6 +21,11 @@ void collide(const polyhedron_shape &shA, const plane_shape &shB,
 
     if (distance > ctx.threshold) return;
 
+    if (ctx.boolean_test) {
+        result.set_collides();
+        return;
+    }
+
     auto polygon = point_cloud_support_polygon(
         rmeshA.vertices.begin(), rmeshA.vertices.end(), vector3_zero,
         normal, proj_poly, true, support_feature_tolerance);

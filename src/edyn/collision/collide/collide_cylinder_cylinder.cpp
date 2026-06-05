@@ -169,6 +169,11 @@ void collide(const cylinder_shape &shA, const cylinder_shape &shB,
         return;
     }
 
+    if (ctx.boolean_test) {
+        result.set_collides();
+        return;
+    }
+
     cylinder_feature featureA;
     size_t feature_indexA;
     shA.support_feature(posA, ornA, -sep_axis, featureA, feature_indexA,
@@ -190,7 +195,6 @@ void collide(const cylinder_shape &shA, const cylinder_shape &shB,
         auto pivotB_world = to_world_space(pivotB, posB, ornB);
         return dot(pivotA_world - pivotB_world, sep_axis);
     };
-
 
     // Index of vector element in cylinder object space that represents the
     // cylinder axis followed by the indices of the elements of the axes

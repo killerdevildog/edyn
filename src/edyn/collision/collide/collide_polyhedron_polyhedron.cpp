@@ -159,6 +159,11 @@ void collide(const polyhedron_shape &shA, const polyhedron_shape &shB,
         return;
     }
 
+    if (ctx.boolean_test) {
+        result.set_collides();
+        return;
+    }
+
     auto polygonA = point_cloud_support_polygon(
         rmeshA.vertices.begin(), rmeshA.vertices.end(), posA,
         sep_axis, projectionA, true, support_feature_tolerance);
