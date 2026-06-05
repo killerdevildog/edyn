@@ -53,14 +53,14 @@ public:
 
             if constexpr(std::is_invocable_r_v<bool, Func, decltype(mesh_idx)>) {
                 if (m_cache[mesh_idx].trimesh) {
-                    return func(mesh_idx);
                     mark_recent_visit(mesh_idx);
+                    return func(mesh_idx);
                 }
                 return true;
             } else {
                 if (m_cache[mesh_idx].trimesh) {
-                    func(mesh_idx);
                     mark_recent_visit(mesh_idx);
+                    func(mesh_idx);
                 }
             }
         });
