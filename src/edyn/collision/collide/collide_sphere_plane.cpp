@@ -9,7 +9,12 @@ void collide(const sphere_shape &sphere, const plane_shape &plane,
     auto d = ctx.posA - center;
     auto l = dot(normal, d);
 
-    if (l > sphere.radius) {
+    if (l > sphere.radius + ctx.threshold) {
+        return;
+    }
+
+    if (ctx.boolean_test) {
+        result.set_collides();
         return;
     }
 

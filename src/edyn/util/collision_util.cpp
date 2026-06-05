@@ -323,7 +323,7 @@ entt::entity create_contact_point(entt::registry &registry,
                                   const collision_result::collision_point& rp,
                                   const std::optional<transient> &transient_contact) {
     EDYN_ASSERT(length_sqr(rp.normal) > EDYN_EPSILON);
-    EDYN_ASSERT(manifold_state.num_points <= max_contacts);
+    EDYN_ASSERT(manifold_state.num_points < max_contacts);
 
     auto cp = contact_point{};
     cp.pivotA = rp.pivotA;
@@ -432,6 +432,7 @@ void destroy_contact_point(entt::registry &registry, entt::entity contact_entity
         registry.patch<contact_point_list>(current_entity);
     }
 
+    EDYN_ASSERT(manifold_state.num_points > 0);
     --manifold_state.num_points;
     registry.patch<contact_manifold_state>(manifold_entity);
     registry.destroy(contact_entity);
@@ -463,6 +464,12 @@ void detect_collision(entt::registry &registry, std::array<entt::entity, 2> body
         auto shape_indexA = body_view.get<shape_index>(body[0]);
         auto shape_indexB = body_view.get<shape_index>(body[1]);
         auto ctx = collision_context{originA, ornA, aabbA, originB, ornB, aabbB, collision_threshold};
+
+        // Do a boolean test if a body is a sensor and has a collide_boolean_test_tag.
+        auto material_view = registry.view<material>();
+        auto boolean_view = registry.view<collide_boolean_test_tag>();
+        ctx.boolean_test = (!material_view->contains(body[0]) && boolean_view.contains(body[0])) ||
+                           (!material_view->contains(body[1]) && boolean_view.contains(body[1]));
 
         visit_shape(shape_indexA, body[0], shapes_views_tuple, [&](auto &&shA) {
             visit_shape(shape_indexB, body[1], shapes_views_tuple, [&](auto &&shB) {

@@ -21,6 +21,11 @@ void collide(const sphere_shape &shA, const box_shape &shB,
         return;
     }
 
+    if (ctx.boolean_test) {
+        result.set_collides();
+        return;
+    }
+
     scalar center_distance;
     auto normal_attachment = contact_normal_attachment::none;
 

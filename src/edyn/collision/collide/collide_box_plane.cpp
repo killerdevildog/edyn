@@ -20,6 +20,11 @@ void collide(const box_shape &shA, const plane_shape &shB,
         return;
     }
 
+    if (ctx.boolean_test) {
+        result.set_collides();
+        return;
+    }
+
     auto vertices = std::array<vector3, 4>{};
     auto num_vertices = size_t{};
 

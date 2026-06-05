@@ -141,6 +141,11 @@ void collide_cylinder_triangle(
         return;
     }
 
+    if (ctx.boolean_test) {
+        result.set_collides();
+        return;
+    }
+
     cylinder_feature cyl_feature;
     size_t cyl_feature_index;
     cylinder.support_feature(posA, ornA, -sep_axis, cyl_feature, cyl_feature_index,
@@ -436,6 +441,7 @@ void collide(const cylinder_shape &cylinder, const triangle_mesh &mesh,
     mesh.visit_triangles(visit_aabb, [&](auto tri_idx) {
         collide_cylinder_triangle(cylinder, mesh, tri_idx,
                                   cylinder_axis, cylinder_vertices, ctx, result);
+        return !(ctx.boolean_test && result.num_points > 0);
     });
 }
 

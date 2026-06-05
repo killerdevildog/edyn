@@ -129,6 +129,11 @@ void collide(const polyhedron_shape &shA, const box_shape &shB,
         return;
     }
 
+    if (ctx.boolean_test) {
+        result.set_collides();
+        return;
+    }
+
     auto polygon = point_cloud_support_polygon(
         meshA.vertices.begin(), meshA.vertices.end(), vector3_zero,
         sep_axis, projection_poly, true, support_feature_tolerance);

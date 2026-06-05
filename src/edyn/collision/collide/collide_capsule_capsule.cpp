@@ -28,6 +28,11 @@ void collide(const capsule_shape &shA, const capsule_shape &shB,
         return;
     }
 
+    if (ctx.boolean_test) {
+        result.set_collides();
+        return;
+    }
+
     vector3 normal;
     scalar distance;
 
@@ -36,7 +41,7 @@ void collide(const capsule_shape &shA, const capsule_shape &shB,
         normal = (closestA[0] - closestB[0]) / dist;
         distance = dist - shA.radius - shB.radius;
     } else {
-        // Seguments intersect in 3D.
+        // Segments intersect in 3D.
         auto axisA = verticesA[1] - verticesA[0];
         auto axisB = verticesB[1] - verticesB[0];
         normal = cross(axisA, axisB);

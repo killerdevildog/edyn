@@ -19,6 +19,11 @@ void collide(const cylinder_shape &shA, const plane_shape &shB,
         return;
     }
 
+    if (ctx.boolean_test) {
+        result.set_collides();
+        return;
+    }
+
     cylinder_feature featureA;
     size_t feature_indexA;
     shA.support_feature(posA, ornA, -normal, featureA, feature_indexA,

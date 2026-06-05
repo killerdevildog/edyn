@@ -138,6 +138,11 @@ void collide(const capsule_shape &shA, const cylinder_shape &shB,
         return;
     }
 
+    if (ctx.boolean_test) {
+        result.set_collides();
+        return;
+    }
+
     scalar proj_capsule_vertices[] = {
         dot(capsule_vertices[0], sep_axis),
         dot(capsule_vertices[1], sep_axis)

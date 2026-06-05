@@ -47,6 +47,7 @@ struct collision_result {
 
     void add_point(const collision_point &);
     void maybe_add_point(const collision_point &);
+    void set_collides();
 };
 
 }

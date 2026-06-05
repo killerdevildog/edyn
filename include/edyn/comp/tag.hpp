@@ -86,6 +86,12 @@ struct external_tag {};
  */
 struct contact_started_tag {};
 
+/**
+ * Perform a boolean test on collision detection. Only effective on sensors.
+ * Assign it to a sensor if contact point information is not needed.
+ */
+struct collide_boolean_test_tag {};
+
 }
 
 #endif // EDYN_COMP_TAG_HPP

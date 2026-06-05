@@ -150,6 +150,11 @@ static void collide_polyhedron_triangle(
         return;
     }
 
+    if (ctx.boolean_test) {
+        result.set_collides();
+        return;
+    }
+
     auto polygon = point_cloud_support_polygon(
         rmesh.vertices.begin(), rmesh.vertices.end(), vector3_zero,
         sep_axis, projection_poly, true, support_feature_tolerance);
@@ -267,6 +272,7 @@ void collide(const polyhedron_shape &poly, const triangle_mesh &mesh,
 
     mesh.visit_triangles(visit_aabb, [&](auto tri_idx) {
         collide_polyhedron_triangle(poly, mesh, tri_idx, ctx, result);
+        return !(ctx.boolean_test && result.num_points > 0);
     });
 }
 

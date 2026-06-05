@@ -154,6 +154,11 @@ void collide(const polyhedron_shape &shA, const cylinder_shape &shB,
         return;
     }
 
+    if (ctx.boolean_test) {
+        result.set_collides();
+        return;
+    }
+
     // Separating axis is in A's space.
     auto normal = rotate(ctx.ornA, sep_axis);
 

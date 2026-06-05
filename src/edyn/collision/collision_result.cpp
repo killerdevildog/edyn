@@ -1,4 +1,5 @@
 #include "edyn/collision/collision_result.hpp"
+#include "edyn/collision/contact_normal_attachment.hpp"
 #include "edyn/math/geom.hpp"
 
 namespace edyn {
@@ -31,5 +32,15 @@ void collision_result::maybe_add_point(const collision_result::collision_point &
         point[res.index] = new_point;
     }
 }
+
+void collision_result::set_collides() {
+    num_points = 1;
+    auto &cp = point[0];
+    cp.pivotA = vector3_zero;
+    cp.pivotB = vector3_zero;
+    cp.normal = vector3_x;
+    cp.normal_attachment = contact_normal_attachment::normal_on_B;
+}
+
 
 }

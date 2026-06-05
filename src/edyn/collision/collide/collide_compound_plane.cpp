@@ -25,6 +25,15 @@ void collide(const compound_shape &shA, const plane_shape &shB,
             collide(sh, shB, child_ctx, child_result);
         }, node.shape_var);
 
+        if (ctx.boolean_test) {
+            if (child_result.num_points > 0) {
+                result.set_collides();
+                return;
+            }
+
+            continue;
+        }
+
         for (size_t i = 0; i < child_result.num_points; ++i) {
             auto &child_point = child_result.point[i];
             child_point.pivotA = to_world_space(child_point.pivotA, node.position, node.orientation);

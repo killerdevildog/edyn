@@ -1,6 +1,7 @@
 #ifndef EDYN_SHAPES_COMPOUND_SHAPE_HPP
 #define EDYN_SHAPES_COMPOUND_SHAPE_HPP
 
+#include <type_traits>
 #include <vector>
 #include <string>
 #include <variant>
@@ -85,9 +86,17 @@ void compound_shape::visit(const AABB &aabb, Func func) const {
     tree.query(aabb, [&](auto tree_node_idx) {
         auto node_id = tree.get_node(tree_node_idx).id;
         auto &node = nodes[node_id];
+        bool ret = true;
+
         std::visit([&](auto &&shape) {
-            func(shape, node_id);
+            if constexpr(std::is_invocable_r_v<bool, Func, decltype(shape), decltype(node_id)>) {
+                ret = func(shape, node_id);
+            } else {
+                func(shape, node_id);
+            }
         }, node.shape_var);
+
+        return ret;
     });
 }
 

@@ -102,6 +102,11 @@ void collide(const box_shape &shA, const box_shape &shB,
         return;
     }
 
+    if (ctx.boolean_test) {
+        result.set_collides();
+        return;
+    }
+
     box_feature featureA, featureB;
     size_t feature_indexA, feature_indexB;
     scalar projectionA, projectionB;

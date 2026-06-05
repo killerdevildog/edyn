@@ -1,6 +1,7 @@
 #ifndef EDYN_SHAPES_TRIANGLE_MESH_HPP
 #define EDYN_SHAPES_TRIANGLE_MESH_HPP
 
+#include <type_traits>
 #include <vector>
 #include <cstdint>
 #include "edyn/config/config.h"
@@ -116,7 +117,11 @@ public:
     void visit_triangles(const AABB &aabb, Func func) const {
         m_triangle_tree.query(aabb, [&](auto tree_node_idx) {
             auto tri_idx = m_triangle_tree.get_node(tree_node_idx).id;
-            func(tri_idx);
+            if constexpr(std::is_invocable_r_v<bool, Func, decltype(tri_idx)>) {
+                return func(tri_idx);
+            } else {
+                func(tri_idx);
+            }
         });
     }
 

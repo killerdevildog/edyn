@@ -164,6 +164,11 @@ void collide(const cylinder_shape &shA, const box_shape &shB,
         return;
     }
 
+    if (ctx.boolean_test) {
+        result.set_collides();
+        return;
+    }
+
     cylinder_feature featureA;
     size_t feature_indexA;
     shA.support_feature(posA, ornA, -sep_axis, featureA, feature_indexA,
