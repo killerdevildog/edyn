@@ -2,6 +2,7 @@
 #define EDYN_SHAPES_PAGED_TRIANGLE_MESH_HPP
 
 #include <mutex>
+#include <type_traits>
 #include <vector>
 #include <atomic>
 #include <memory>
@@ -50,9 +51,17 @@ public:
             auto mesh_idx = m_tree.get_node(tree_node_idx).id;
             load_node_if_needed(mesh_idx);
 
-            if (m_cache[mesh_idx].trimesh) {
-                func(mesh_idx);
-                mark_recent_visit(mesh_idx);
+            if constexpr(std::is_invocable_r_v<bool, Func, decltype(mesh_idx)>) {
+                if (m_cache[mesh_idx].trimesh) {
+                    return func(mesh_idx);
+                    mark_recent_visit(mesh_idx);
+                }
+                return true;
+            } else {
+                if (m_cache[mesh_idx].trimesh) {
+                    func(mesh_idx);
+                    mark_recent_visit(mesh_idx);
+                }
             }
         });
     }

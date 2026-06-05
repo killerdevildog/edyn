@@ -24,7 +24,13 @@ void traverse_tree(const Tree &tree, NodeIdType root_id, NodeIdType null_node_id
 
         if (test_func(node)) {
             if (node.leaf()) {
-                visit_func(id);
+                if constexpr(std::is_invocable_r_v<bool, VisitFunc, NodeIdType>) {
+                    if (!visit_func(id)) {
+                        break;
+                    }
+                } else {
+                    visit_func(id);
+                }
             } else {
                 stack.push_back(node.child1);
                 stack.push_back(node.child2);
