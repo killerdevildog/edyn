@@ -465,6 +465,12 @@ void detect_collision(entt::registry &registry, std::array<entt::entity, 2> body
         auto shape_indexB = body_view.get<shape_index>(body[1]);
         auto ctx = collision_context{originA, ornA, aabbA, originB, ornB, aabbB, collision_threshold};
 
+        // Do a boolean test if a body is a sensor and has a collide_boolean_test_tag.
+        auto material_view = registry.view<material>();
+        auto boolean_view = registry.view<collide_boolean_test_tag>();
+        ctx.boolean_test = (!material_view->contains(body[0]) && boolean_view.contains(body[0])) ||
+                           (!material_view->contains(body[1]) && boolean_view.contains(body[1]));
+
         visit_shape(shape_indexA, body[0], shapes_views_tuple, [&](auto &&shA) {
             visit_shape(shape_indexB, body[1], shapes_views_tuple, [&](auto &&shB) {
                 collide(shA, shB, ctx, result);
